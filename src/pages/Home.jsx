@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { Search, Calendar, Filter, Plus, ChevronRight, Bookmark } from 'lucide-react'
 import EventCard from '../components/EventCard'
 import { supabase } from '../services/supabase'
@@ -9,6 +10,7 @@ const Home = () => {
   const [events, setEvents] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const navigate = useNavigate()
   const { darkMode } = useThemeStore()
 
   useEffect(() => {
@@ -26,12 +28,7 @@ const Home = () => {
       setEvents(data || [])
     } catch (err) {
       console.error('Fetch error:', err)
-      // Mock data for demo if backend not ready
-      setEvents([
-        { id: '1', title: 'CyberTech 2026', description: 'Join us for the biggest hackathon of the year and showcase your coding skills.', date: '2026-05-15', poster_url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80' },
-        { id: '2', title: 'Musical Night', description: 'Experience a night of rhythms and melodies from our college bands.', date: '2026-06-10', poster_url: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80' },
-        { id: '3', title: 'Sports Gala', description: 'Annual inter-departmental sports competitions. Compete and conquer.', date: '2026-04-20', poster_url: 'https://images.unsplash.com/photo-1541252260730-0412e8e2108e?auto=format&fit=crop&q=80' },
-      ])
+      setEvents([]) // No fallback to mock data
     } finally {
       setIsLoading(false)
     }
@@ -75,14 +72,20 @@ const Home = () => {
               The centralized hub for events, registrations, and announcements. Never miss a single beat of your university experience.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <button className={`px-8 py-4 rounded-2xl font-bold flex items-center gap-2 transition-all hover:scale-105 active:scale-95 ${
-                darkMode ? 'bg-primary text-black hover:shadow-neon' : 'bg-white text-black'
-              }`}>
+              <button 
+                onClick={() => document.getElementById('discovery-section').scrollIntoView({ behavior: 'smooth' })}
+                className={`px-8 py-4 rounded-2xl font-bold flex items-center gap-2 transition-all hover:scale-105 active:scale-95 ${
+                  darkMode ? 'bg-primary text-black hover:shadow-neon' : 'bg-white text-black'
+                }`}
+              >
                 Explore Events <ChevronRight size={20} />
               </button>
-              <button className={`px-8 py-4 rounded-2xl font-bold flex items-center gap-2 border transition-all hover:bg-white/10 group ${
-                darkMode ? 'border-white/20 text-white' : 'border-white/40 text-white'
-              }`}>
+              <button 
+                onClick={() => navigate('/admin/events')}
+                className={`px-8 py-4 rounded-2xl font-bold flex items-center gap-2 border transition-all hover:bg-white/10 group ${
+                  darkMode ? 'border-white/20 text-white' : 'border-white/40 text-white'
+                }`}
+              >
                 <Plus size={20} className="group-hover:rotate-90 transition-transform" /> Post Event
               </button>
             </div>
@@ -106,7 +109,7 @@ const Home = () => {
       </section>
 
       {/* Featured Header & Filter */}
-      <section className="space-y-8">
+      <section id="discovery-section" className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
             <h2 className={`text-4xl font-bold tracking-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}>
