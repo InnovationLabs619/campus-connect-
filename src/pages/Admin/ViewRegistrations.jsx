@@ -25,7 +25,7 @@ const ViewRegistrations = () => {
     try {
       const { data, error } = await supabase
         .from('registrations')
-        .select('*, events(*), users(*)')
+        .select('*, events(*)')
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -37,8 +37,7 @@ const ViewRegistrations = () => {
         { 
           id: '1', 
           events: { title: 'CyberTech 2026' }, 
-          users: { name: 'John Doe', email: '22cs01@campus.connect' },
-          form_data: { branch: 'CSE', semester: '4', phone: '9876543210' },
+          form_data: { name: 'John Doe', email: '22cs01@campus.connect', branch: 'CSE', semester: '4', phone: '9876543210' },
           created_at: new Date().toISOString() 
         },
       ])
@@ -50,8 +49,8 @@ const ViewRegistrations = () => {
   const exportToExcel = () => {
     const dataToExport = registrations.map(reg => ({
       Event: reg.events?.title,
-      StudentName: reg.users?.name,
-      RollNumber: reg.users?.email?.split('@')[0],
+      StudentName: reg.form_data?.name,
+      RollNumber: reg.form_data?.roll_number || reg.form_data?.email?.split('@')[0],
       Phone: reg.form_data?.phone,
       Branch: reg.form_data?.branch,
       Semester: reg.form_data?.semester,
@@ -67,8 +66,8 @@ const ViewRegistrations = () => {
 
   const filteredRegistrations = registrations.filter(reg => 
     reg.events?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.users?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.users?.email.toLowerCase().includes(searchTerm.toLowerCase())
+    reg.form_data?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    reg.form_data?.email?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
@@ -147,8 +146,8 @@ const ViewRegistrations = () => {
                          <User size={18} />
                       </div>
                       <div className="space-y-1">
-                         <p className="text-sm font-bold tracking-tight italic uppercase">{reg.users?.name}</p>
-                         <p className="text-[10px] uppercase font-black opacity-40 italic">{reg.users?.email}</p>
+                         <p className="text-sm font-bold tracking-tight italic uppercase">{reg.form_data?.name}</p>
+                         <p className="text-[10px] uppercase font-black opacity-40 italic">{reg.form_data?.email}</p>
                       </div>
                    </div>
 

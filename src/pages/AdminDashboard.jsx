@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   Users, Calendar, MessageSquare, ClipboardList, 
@@ -6,15 +7,66 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useThemeStore } from '../store/store'
+import { supabase } from '../services/supabase'
 
 const AdminDashboard = () => {
   const { darkMode } = useThemeStore()
 
+  const [counts, setCounts] = useState({
+    users: 0,
+    events: 0,
+    faqs: 0,
+    regs: 0
+  })
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const [
+          { count: usersCount },
+          { count: eventsCount },
+          { data: faqsData },
+          { count: regsCount }
+        ] = await Promise.all([
+          supabase.from('users').select('*', { count: 'exact', head: true }),
+          supabase.from('events').select('*', { count: 'exact', head: true }),
+          supabase.from('faq').select('answer'),
+          supabase.from('registrations').select('*', { count: 'exact', head: true })
+        ])
+
+        const pendingFaqsCount = faqsData?.filter(f => !f.answer).length || 0
+
+        setCounts({
+          users: usersCount || 0,
+          events: eventsCount || 0,
+          faqs: pendingFaqsCount || 0,
+          regs: regsCount || 0
+        })
+      } catch (error) {
+        console.error('Error fetching dashboard counts:', error)
+      }
+    }
+
+    fetchCounts()
+
+    const usersChannel = supabase.channel('users-admin').on('postgres_changes', { event: '*', table: 'users' }, () => fetchCounts()).subscribe()
+    const eventsChannel = supabase.channel('events-admin').on('postgres_changes', { event: '*', table: 'events' }, () => fetchCounts()).subscribe()
+    const faqChannel = supabase.channel('faq-admin-dash').on('postgres_changes', { event: '*', table: 'faq' }, () => fetchCounts()).subscribe()
+    const regsChannel = supabase.channel('regs-admin').on('postgres_changes', { event: '*', table: 'registrations' }, () => fetchCounts()).subscribe()
+
+    return () => {
+      supabase.removeChannel(usersChannel)
+      supabase.removeChannel(eventsChannel)
+      supabase.removeChannel(faqChannel)
+      supabase.removeChannel(regsChannel)
+    }
+  }, [])
+
   const stats = [
-    { name: 'Active Users', value: '4,231', change: '+12%', icon: Users, color: 'text-blue-500' },
-    { name: 'Live Events', value: '12', change: '+2', icon: Calendar, color: 'text-primary' },
-    { name: 'Pending FAQs', value: '28', change: '-5', icon: MessageSquare, color: 'text-orange-500' },
-    { name: 'Total Regs', value: '1,894', change: '+15%', icon: ClipboardList, color: 'text-purple-500' },
+    { name: 'Active Users', value: counts.users.toLocaleString(), change: '+12%', icon: Users, color: 'text-blue-500' },
+    { name: 'Live Events', value: counts.events.toLocaleString(), change: '+2', icon: Calendar, color: 'text-primary' },
+    { name: 'Pending FAQs', value: counts.faqs.toLocaleString(), change: '-5', icon: MessageSquare, color: 'text-orange-500' },
+    { name: 'Total Regs', value: counts.regs.toLocaleString(), change: '+15%', icon: ClipboardList, color: 'text-purple-500' },
   ]
 
   const quickActions = [
