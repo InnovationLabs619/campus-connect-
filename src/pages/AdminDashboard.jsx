@@ -78,9 +78,19 @@ const AdminDashboard = () => {
   ]
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 relative">
+      {/* Background Graphic Elements */}
+      {darkMode && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
+          <div className="absolute top-[10%] left-[5%] w-96 h-96 bg-primary/5 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-purple-500/5 blur-[150px] rounded-full" />
+          {/* Tech Grid Overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]" />
+        </div>
+      )}
+
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-primary">
             <LayoutDashboard size={14} />
@@ -110,10 +120,13 @@ const AdminDashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className={`p-8 rounded-[40px] border relative overflow-hidden transition-all hover:scale-[1.02] ${
+            className={`p-8 rounded-[40px] border relative overflow-hidden transition-all hover:scale-[1.02] group ${
               darkMode ? 'bg-zinc-900/40 border-white/10 hover:border-primary/30 glass-dark' : 'bg-white border-gray-100 shadow-xl'
             }`}
           >
+            {/* Tech Decoration */}
+            <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-primary/20 rounded-tr-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
+            
             <div className="flex items-center justify-between mb-4 relative z-10">
               <div className={`p-4 rounded-2xl bg-white/5 border border-white/5 ${stat.color}`}>
                 <stat.icon size={24} />
@@ -149,10 +162,13 @@ const AdminDashboard = () => {
                     darkMode ? 'bg-white/5' : 'bg-gray-100'
                   }`}
                 >
-                   <div className={`p-5 h-full rounded-[32px] border transition-all flex flex-col items-center justify-center text-center gap-3 ${
-                     darkMode ? 'bg-zinc-900 border-white/5 group-hover:border-primary group-hover:shadow-neon' : 'bg-white border-gray-200 hover:border-black shadow-sm'
+                   <div className={`p-5 h-full rounded-[32px] border transition-all flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden ${
+                     darkMode ? 'bg-zinc-900/60 border-white/5 group-hover:border-primary group-hover:shadow-neon' : 'bg-white border-gray-200 hover:border-black shadow-sm'
                    }`}>
-                      <div className={`p-4 rounded-3xl ${action.color} text-white shadow-lg group-hover:scale-110 transition-transform`}>
+                      {/* Hover Scanline */}
+                      <div className="absolute top-0 left-0 w-full h-1 bg-primary/50 blur-[2px] -translate-y-full group-hover:animate-scanline" />
+                      
+                      <div className={`p-4 rounded-3xl z-10 ${action.color} text-white shadow-lg group-hover:scale-110 transition-transform`}>
                          <action.icon size={24} />
                       </div>
                       <h4 className="font-bold text-base tracking-tight uppercase italic line-clamp-2">{action.name}</h4>
