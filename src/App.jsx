@@ -21,6 +21,7 @@ import ManageEvents from './pages/Admin/ManageEvents'
 import ViewRegistrations from './pages/Admin/ViewRegistrations'
 import UserManagement from './pages/Admin/UserManagement'
 import FAQManagement from './pages/Admin/FAQManagement'
+import Scanner from './pages/Admin/Scanner'
 
 const ProtectedRoute = ({ children, role }) => {
   const { user, role: userRole } = useAuthStore()
@@ -67,6 +68,7 @@ function App() {
           <Route path="/admin/events" element={<ProtectedRoute role="admin"><ManageEvents /></ProtectedRoute>} />
           <Route path="/admin/registrations" element={<ProtectedRoute role="admin"><ViewRegistrations /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute role="admin"><UserManagement /></ProtectedRoute>} />
+          <Route path="/admin/scan" element={<ProtectedRoute role="admin"><Scanner /></ProtectedRoute>} />
           <Route path="/admin/faq" element={<ProtectedRoute role="admin"><FAQManagement /></ProtectedRoute>} />
         </Route>
       </Routes>

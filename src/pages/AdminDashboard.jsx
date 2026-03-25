@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import { 
   Users, Calendar, MessageSquare, ClipboardList, 
   ArrowUpRight, TrendingUp, Sparkles, Plus,
-  LayoutDashboard, UserPlus, HelpCircle, FileText
+  LayoutDashboard, UserPlus, HelpCircle, FileText,
+  Scan
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useThemeStore } from '../store/store'
@@ -70,11 +71,11 @@ const AdminDashboard = () => {
   ]
 
   const quickActions = [
-    { name: 'Post the event', icon: Plus, path: '/admin/events', color: 'bg-primary' },
-    { name: 'Delete the event', icon: Sparkles, path: '/admin/events', color: 'bg-red-500' },
-    { name: 'Number of users registered for the event', icon: ClipboardList, path: '/admin/registrations', color: 'bg-purple-500' },
-    { name: 'Add the members', icon: UserPlus, path: '/admin/users', color: 'bg-blue-500' },
-    { name: 'Remove the members', icon: Users, path: '/admin/users', color: 'bg-orange-500' },
+    { name: 'Scan Entry Passport', icon: Scan, path: '/admin/scan', color: 'bg-primary' },
+    { name: 'Track Registrations', icon: ClipboardList, path: '/admin/registrations', color: 'bg-purple-500' },
+    { name: 'Post Event', icon: Plus, path: '/admin/events', color: 'bg-primary' },
+    { name: 'Oversee Users', icon: Users, path: '/admin/users', color: 'bg-blue-500' },
+    { name: 'Moderation System', icon: Sparkles, path: '/admin/faq', color: 'bg-red-500' },
   ]
 
   return (
