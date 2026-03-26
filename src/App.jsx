@@ -22,6 +22,7 @@ import ViewRegistrations from './pages/Admin/ViewRegistrations'
 import UserManagement from './pages/Admin/UserManagement'
 import FAQManagement from './pages/Admin/FAQManagement'
 import Scanner from './pages/Admin/Scanner'
+import BackendTest from './pages/BackendTest'
 
 const ProtectedRoute = ({ children, role }) => {
   const { user, role: userRole } = useAuthStore()
@@ -70,6 +71,7 @@ function App() {
           <Route path="/admin/users" element={<ProtectedRoute role="admin"><UserManagement /></ProtectedRoute>} />
           <Route path="/admin/scan" element={<ProtectedRoute role="admin"><Scanner /></ProtectedRoute>} />
           <Route path="/admin/faq" element={<ProtectedRoute role="admin"><FAQManagement /></ProtectedRoute>} />
+          <Route path="/admin/test-backends" element={<ProtectedRoute role="admin"><BackendTest /></ProtectedRoute>} />
         </Route>
       </Routes>
     </Router>
